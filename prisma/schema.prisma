@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum bayar {
+  CASH
+  QRIS
+}
+
+model admin {
+  id       Int    @id @default(autoincrement())
+  nama     String @default("")
+  email    String @unique @default("")
+  password String @default("")
+  telepon  Int    @unique @default(0)
+}
+
+model customer {
+  id       Int     @id @default(autoincrement())
+  nama     String  @default("")
+  email    String  @unique @default("")
+  password String  @default("")
+  alamat   String  @default("")
+  telepon  Int     @unique @default(0)
+  order    order[]
+}
+
+model order {
+  id           Int        @id @default(autoincrement())
+  idCustomer   Int?
+  customer     customer?  @relation(fields: [idCustomer], references: [id])
+  tanggal      DateTime   @default(now())
+  tanggalBayar DateTime   @default(now())
+  metodeBayar  bayar      @default(QRIS)
+  subOrder     subOrder[]
+}
+
+model subOrder {
+  id       Int     @id @default(autoincrement())
+  idOrder  Int?
+  order    order?  @relation(fields: [idOrder], references: [id])
+  idProduk Int?
+  produk   produk? @relation(fields: [idProduk], references: [id])
+}
+
+model produk {
+  id        Int        @id @default(autoincrement())
+  nama      String     @default("")
+  deskripsi String     @default("") @db.Text
+  harga     Int        @default(0)
+  stok      Int        @default(0)
+  foto      String     @default("")
+  subOrder  subOrder[]
+}
