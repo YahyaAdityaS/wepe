@@ -37,13 +37,13 @@ model customer {
 }
 
 model order {
-  id           Int        @id @default(autoincrement())
-  idCustomer   Int?
-  customer     customer?  @relation(fields: [idCustomer], references: [id])
-  tanggal      DateTime   @default(now())
-  tanggalBayar DateTime   @default(now())
-  metodeBayar  bayar      @default(QRIS)
-  subOrder     subOrder[]
+  id          Int        @id @default(autoincrement())
+  idCustomer  Int?
+  customer    customer?  @relation(fields: [idCustomer], references: [id])
+  createdAt   DateTime   @default(now())
+  updateAt    DateTime   @updatedAt
+  metodeBayar bayar      @default(QRIS)
+  subOrder    subOrder[]
 }
 
 model subOrder {
