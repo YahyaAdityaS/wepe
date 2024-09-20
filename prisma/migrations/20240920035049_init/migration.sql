@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `produk` ADD COLUMN `kategori` ENUM('BAJU', 'GANTUNGAN', 'STIKER') NOT NULL DEFAULT 'BAJU';

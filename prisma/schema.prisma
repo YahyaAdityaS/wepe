@@ -18,8 +18,15 @@ enum bayar {
   QRIS
 }
 
+enum kategori {
+  BAJU
+  GANTUNGAN
+  STIKER
+}
+
 model admin {
   id       Int    @id @default(autoincrement())
+  uuid     String @default("")
   nama     String @default("")
   email    String @unique @default("")
   password String @default("")
@@ -28,6 +35,7 @@ model admin {
 
 model customer {
   id       Int     @id @default(autoincrement())
+  uuid     String  @default("")
   nama     String  @default("")
   email    String  @unique @default("")
   password String  @default("")
@@ -38,6 +46,7 @@ model customer {
 
 model order {
   id          Int        @id @default(autoincrement())
+  uuid        String     @default("")
   idCustomer  Int?
   customer    customer?  @relation(fields: [idCustomer], references: [id])
   createdAt   DateTime   @default(now())
@@ -48,6 +57,7 @@ model order {
 
 model subOrder {
   id       Int     @id @default(autoincrement())
+  uuid     String  @default("")
   idOrder  Int?
   order    order?  @relation(fields: [idOrder], references: [id])
   idProduk Int?
@@ -56,7 +66,9 @@ model subOrder {
 
 model produk {
   id        Int        @id @default(autoincrement())
+  uuid      String     @default("")
   nama      String     @default("")
+  kategori  kategori   @default(BAJU)
   deskripsi String     @default("") @db.Text
   harga     Int        @default(0)
   stok      Int        @default(0)
