@@ -33,11 +33,11 @@ export const getAllMenus = async (request: Request, response: Response) => { //e
 
 export const createMenu = async (request: Request, response: Response) => {
     try {
-        const { nama, price, kategori, deskripsi } = request.body
+        const { nama, harga, kategori, deskripsi, stok } = request.body
         const uuid = uuidv4()
 
         const newMenu = await prisma.produk.create({ //await menunngu lalu dijalankan
-            data: {uuid, nama, harga: Number(price), kategori, deskripsi }
+            data: {uuid, nama, harga: Number(harga), kategori, deskripsi, stok }
         })
         return response.json({
             Status: true,
@@ -53,4 +53,40 @@ export const createMenu = async (request: Request, response: Response) => {
             }).status(400);
     }
 }
+
+export const updateMenu = async (request: Request, response: Response) => {
+    try {
+        const { id } = request.params
+        const { nama, harga, kategori, deskripsi, stok } = request.body
+
+        const findMenu = await prisma.produk.findFirst({ where: { id  : Number(id) } })
+        if (!findMenu) return response
+            .status(200)
+            .json({ status: false, massage: 'Ra Enek Menu E Cah' })
+
+        const updateMenu = await prisma.produk.update({
+            data: {
+                nama: nama || findMenu.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
+                harga: harga ? Number(harga) : findMenu.harga, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
+                kategori: kategori || findMenu.kategori,
+                deskripsi: deskripsi || findMenu.deskripsi,
+                stok: stok || findMenu.stok
+            },
+            where: { id: Number(id) }
+        })
+
+        return response.json({
+            status: true,
+            data: updateMenu,
+            massage: 'Update Menu Iso Cah'
+        })
+
+    } catch (error) {
+        return response
+        .json({
+            status: false,
+            massage : `Eror Sam ${error}`
+        })
+        .status(400)
+    }}
 

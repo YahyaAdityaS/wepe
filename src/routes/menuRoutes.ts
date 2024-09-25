@@ -1,9 +1,13 @@
 import express from "express"
-import { getAllProduk } from "../controllers/menuControllers"
+import { getAllMenus, updateMenu } from "../controllers/menuControllers"
+import {createMenu} from "../controllers/menuControllers"
+import { verifyAddMenu, verifyEditMenu } from "../middlewares/menuMiddlewares"
 
 const app = express()
 app.use(express.json())
 
-app.get('/', getAllProduk)
+app.get('/', getAllMenus)
+app.post(`/`,[verifyAddMenu], createMenu)
+app.put(`/:id`, [verifyEditMenu], updateMenu)
 
 export default app 

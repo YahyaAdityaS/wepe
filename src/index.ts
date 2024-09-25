@@ -1,15 +1,16 @@
-import express from 'express'
-import cors from 'cors'
-import MenuRoute from './routes/menuRoutes'
+import express from 'express';
+import cors from 'cors';
+import MenuRoute from './routes/menuRoutes';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
-const PORT: number = 8000
-const app = express()
-app.use(cors())
+const PORT: number = 4000;
+const app = express();
+app.use(cors());
 
-app.use('/menu', MenuRoute)
+app.use('/produk', MenuRoute);
 
 app.listen(PORT, () => {
-    console.log(`[server]: Server is running at http://localhost:${PORT}`) 
-})
+    console.log(`[server]: Server is running at http://localhost:${PORT}`);
+});
