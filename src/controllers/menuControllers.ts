@@ -89,4 +89,27 @@ export const updateMenu = async (request: Request, response: Response) => {
         })
         .status(400)
     }}
-
+    export const deleteMenu = async (request: Request, response: Response) => {
+        try {
+            const {id} = request.params
+            const findMenu = await prisma.produk.findFirst({where: {id: Number(id)}})
+            if (!findMenu) return response
+            .status(200)
+            .json({status: false, message: 'Ra Nemu Sam'})
+    
+            const deletedMenu = await prisma.produk.delete({
+                where: {id: Number(id)}
+            })
+            return response.json({
+                status: true,
+                data:deleteMenu,
+                message: 'Menu E Iso Dihapus Sam'
+            }).status(200)
+        } catch (eror) {
+            return response
+            .json({
+                status:false,
+                message: `Eror Sam ${eror}`
+            }).status(400)
+        }
+    }
