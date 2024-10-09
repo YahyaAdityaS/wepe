@@ -24,6 +24,12 @@ enum kategori {
   STIKER
 }
 
+enum status {
+  DONE
+  PAID
+  NEW
+}
+
 model admin {
   id       Int    @id @default(autoincrement())
   uuid     String @default("")
@@ -41,6 +47,7 @@ model customer {
   password String  @default("")
   alamat   String  @default("")
   telepon  Int     @unique @default(0)
+  foto     String  @default("")
   order    order[]
 }
 
@@ -51,6 +58,7 @@ model order {
   customer    customer?  @relation(fields: [idCustomer], references: [id])
   createdAt   DateTime   @default(now())
   updateAt    DateTime   @updatedAt
+  status      status     @default(PAID)
   metodeBayar bayar      @default(QRIS)
   subOrder    subOrder[]
 }

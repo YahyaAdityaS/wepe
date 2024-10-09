@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `customer` ADD COLUMN `foto` VARCHAR(191) NOT NULL DEFAULT '';
