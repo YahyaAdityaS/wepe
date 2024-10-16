@@ -36,7 +36,7 @@ model admin {
   nama     String @default("")
   email    String @unique @default("")
   password String @default("")
-  telepon  Int    @unique @default(0)
+  telepon  String @unique @default("")
 }
 
 model customer {
@@ -46,7 +46,7 @@ model customer {
   email    String  @unique @default("")
   password String  @default("")
   alamat   String  @default("")
-  telepon  Int     @unique @default(0)
+  telepon  String  @unique @default("")
   foto     String  @default("")
   order    order[]
 }

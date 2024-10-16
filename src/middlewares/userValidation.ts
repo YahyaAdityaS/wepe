@@ -11,16 +11,18 @@ const addDataSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().min(3).required(),
-    role: Joi.string().valid('CASHIER', 'MANAGER',).required(), //.valid = validasi kategori menu (harus sesuai dengan enum)
-    profile_picture: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
+    telepon: Joi.string().required(),
+    alamat: Joi.string().required(),
+    foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
 })
 
 const editDataSchema = Joi.object({
-    name: Joi.string().optional(),
+    nama: Joi.string().optional(),
     email: Joi.string().optional(),
     password: Joi.string().min(3).optional(),
-    role: Joi.string().valid('CASHIER', 'MANAGER',).optional(), //.valid = validasi kategori menu (harus sesuai dengan enum)
-    profile_picture: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
+    foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
+    alamat: Joi.string().optional(),
+    telepon: Joi.string().optional(),
 })
 
 export const verifyAuthentication = (

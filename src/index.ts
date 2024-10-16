@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 app.use('/produk', MenuRoute);
-app.use('/user', UserRoute)
+app.use('/customer', UserRoute)
 
 app.listen(PORT, () => {
     console.log(`[server]: Server is running at http://localhost:${PORT}`);

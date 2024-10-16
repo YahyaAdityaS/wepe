@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { $Enums, PrismaClient, status} from "@prisma/client";
+import { $Enums, PrismaClient, status } from "@prisma/client";
 import { request } from "http";
 const { v4: uuidv4 } = require("uuid");
 import { BASE_URL, SECRET } from "../global";
@@ -32,10 +32,10 @@ export const getAllCustomer = async (request: Request, response: Response) => {
 
 export const createCustomer = async (request: Request, response: Response) => {
     try {
-        const { nama, email, password,} = request.body
+        const { nama, email, password, telepon, alamat } = request.body
         const uuid = uuidv4()
         const newCustomer = await prisma.customer.create({
-            data: { uuid, nama, email, password: md5(password)}
+            data: { uuid, nama, email, telepon, alamat, password: md5(password), }
         })
         return response.json({
             status: true,
@@ -54,7 +54,7 @@ export const createCustomer = async (request: Request, response: Response) => {
 export const updateCustomer = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
-        const { nama, email, password} = request.body
+        const { nama, email, password, telepon, alamat } = request.body
 
         const findCustomer = await prisma.customer.findFirst({ where: { id: Number(id) } })
         if (!findCustomer) return response
@@ -69,6 +69,8 @@ export const updateCustomer = async (request: Request, response: Response) => {
                 nama: nama || findCustomer.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
                 email: email || findCustomer.email, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
                 password: password || findCustomer.password,
+                telepon: telepon || findCustomer.telepon,
+                alamat: alamat || findCustomer.alamat
             },
             where: { id: Number(id) }
         })
@@ -129,9 +131,9 @@ export const deleteCustomer = async (request: Request, response: Response) => {
             .status(200)
             .json({ status: false, message: 'Ra Nemu Menu E Sam' })
 
-            let path = `${BASE_URL}/../public/profile-picture/${findCustomer.foto}`
-            let exists = fs.existsSync(path)
-            if (exists && findCustomer.foto !== ``) fs.unlinkSync(path)
+        let path = `${BASE_URL}/../public/profile-picture/${findCustomer.foto}`
+        let exists = fs.existsSync(path)
+        if (exists && findCustomer.foto !== ``) fs.unlinkSync(path)
 
         const deleteCustomer = await prisma.customer.delete({
             where: { id: Number(id) }
