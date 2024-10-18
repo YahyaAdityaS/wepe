@@ -30,16 +30,12 @@ enum status {
   NEW
 }
 
-model admin {
-  id       Int    @id @default(autoincrement())
-  uuid     String @default("")
-  nama     String @default("")
-  email    String @unique @default("")
-  password String @default("")
-  telepon  String @unique @default("")
+enum role {
+  ADMIN
+  CUSTOMER
 }
 
-model customer {
+model user {
   id       Int     @id @default(autoincrement())
   uuid     String  @default("")
   nama     String  @default("")
@@ -47,6 +43,7 @@ model customer {
   password String  @default("")
   alamat   String  @default("")
   telepon  String  @unique @default("")
+  role     role    @default(CUSTOMER)
   foto     String  @default("")
   order    order[]
 }
@@ -54,8 +51,8 @@ model customer {
 model order {
   id          Int        @id @default(autoincrement())
   uuid        String     @default("")
-  idCustomer  Int?
-  customer    customer?  @relation(fields: [idCustomer], references: [id])
+  idUser      Int?
+  user        user?      @relation(fields: [idUser], references: [id])
   createdAt   DateTime   @default(now())
   updateAt    DateTime   @updatedAt
   status      status     @default(PAID)
@@ -79,7 +76,7 @@ model produk {
   kategori  kategori   @default(BAJU)
   deskripsi String     @default("") @db.Text
   harga     Int        @default(0)
-  stok      Int        @default(0)
+  stok      Int        
   foto      String     @default("")
   subOrder  subOrder[]
 }

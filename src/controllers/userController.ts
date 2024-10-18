@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { $Enums, PrismaClient, status } from "@prisma/client";
+import { $Enums, PrismaClient, role, status } from "@prisma/client";
 import { request } from "http";
 const { v4: uuidv4 } = require("uuid");
 import { BASE_URL, SECRET } from "../global";
@@ -9,15 +9,15 @@ import md5 from "md5"; //enskripsi password
 import { sign } from "jsonwebtoken"; //buat mendapatkan token jsonwebtoken
 
 const prisma = new PrismaClient({ errorFormat: "pretty" })
-export const getAllCustomer = async (request: Request, response: Response) => {
+export const getAllUser = async (request: Request, response: Response) => {
     try {
         const { search } = request.query
-        const allCustomer = await prisma.customer.findMany({
+        const allUser = await prisma.user.findMany({
             where: { nama: { contains: search?.toString() || "" } }
         })
         return response.json({
             status: true,
-            data: allCustomer,
+            data: allUser,
             message: 'Iki Isi User E Cah'
         }).status(200)
     }
@@ -30,16 +30,16 @@ export const getAllCustomer = async (request: Request, response: Response) => {
     }
 }
 
-export const createCustomer = async (request: Request, response: Response) => {
+export const createUser = async (request: Request, response: Response) => {
     try {
         const { nama, email, password, telepon, alamat } = request.body
         const uuid = uuidv4()
-        const newCustomer = await prisma.customer.create({
+        const newUser = await prisma.user.create({
             data: { uuid, nama, email, telepon, alamat, password: md5(password), }
         })
         return response.json({
             status: true,
-            date: newCustomer,
+            date: newUser,
             message: `Gawe User Iso Cah`
         })
     } catch (error) {
@@ -51,33 +51,33 @@ export const createCustomer = async (request: Request, response: Response) => {
     }
 }
 
-export const updateCustomer = async (request: Request, response: Response) => {
+export const updateUser = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
         const { nama, email, password, telepon, alamat } = request.body
 
-        const findCustomer = await prisma.customer.findFirst({ where: { id: Number(id) } })
-        if (!findCustomer) return response
+        const findUser = await prisma.user.findFirst({ where: { id: Number(id) } })
+        if (!findUser) return response
             .status(200)
             .json({
                 status: false,
                 massage: 'Ra Enek User E Cah'
             })
 
-        const updateCustomer = await prisma.customer.update({
+        const updateUser = await prisma.user.update({
             data: {
-                nama: nama || findCustomer.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
-                email: email || findCustomer.email, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
-                password: password || findCustomer.password,
-                telepon: telepon || findCustomer.telepon,
-                alamat: alamat || findCustomer.alamat
+                nama: nama || findUser.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
+                email: email || findUser.email, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
+                password: password || findUser.password,
+                telepon: telepon || findUser.telepon,
+                alamat: alamat || findUser.alamat
             },
             where: { id: Number(id) }
         })
 
         return response.json({
             status: true,
-            data: updateCustomer,
+            data: updateUser,
             massage: 'Update User Iso Cah'
         })
 
@@ -94,18 +94,18 @@ export const updateCustomer = async (request: Request, response: Response) => {
 export const changePicture = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
-        const findCustomer = await prisma.customer.findFirst({ where: { id: Number(id) } })
-        if (!findCustomer) return response
+        const findUser = await prisma.user.findFirst({ where: { id: Number(id) } })
+        if (!findUser) return response
             .status(200)
             .json({ status: false, message: 'Ra Nemu User E Sam' })
-        let filename = findCustomer.foto
+        let filename = findUser.foto
         if (request.file) {
             filename = request.file.filename
-            let path = `${BASE_URL}/../public/profile-picture/${findCustomer.foto}`
+            let path = `${BASE_URL}/../public/profile-picture/${findUser.foto}`
             let exists = fs.existsSync(path)
-            if (exists && findCustomer.foto !== ``) fs.unlinkSync(path)
+            if (exists && findUser.foto !== ``) fs.unlinkSync(path)
         }
-        const updatePicture = await prisma.customer.update({
+        const updatePicture = await prisma.user.update({
             data: { foto: filename },
             where: { id: Number(id) }
         })
@@ -123,24 +123,24 @@ export const changePicture = async (request: Request, response: Response) => {
     }
 }
 
-export const deleteCustomer = async (request: Request, response: Response) => {
+export const deleteUser = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
-        const findCustomer = await prisma.customer.findFirst({ where: { id: Number(id) } })
-        if (!findCustomer) return response
+        const findUser = await prisma.user.findFirst({ where: { id: Number(id) } })
+        if (!findUser) return response
             .status(200)
             .json({ status: false, message: 'Ra Nemu Menu E Sam' })
 
-        let path = `${BASE_URL}/../public/profile-picture/${findCustomer.foto}`
+        let path = `${BASE_URL}/../public/profile-picture/${findUser.foto}`
         let exists = fs.existsSync(path)
-        if (exists && findCustomer.foto !== ``) fs.unlinkSync(path)
+        if (exists && findUser.foto !== ``) fs.unlinkSync(path)
 
-        const deleteCustomer = await prisma.customer.delete({
+        const deleteUser = await prisma.user.delete({
             where: { id: Number(id) }
         })
         return response.json({
             status: true,
-            data: deleteCustomer,
+            data: deleteUser,
             message: 'User E Iso Dihapus Sam'
         }).status(200)
     } catch (eror) {
@@ -155,10 +155,10 @@ export const deleteCustomer = async (request: Request, response: Response) => {
 export const authentication = async (request: Request, response: Response) => {
     try {
         const { email, password } = request.body;
-        const findCustomer = await prisma.customer.findFirst({
+        const findUser = await prisma.user.findFirst({
             where: { email, password: md5(password) },
         });
-        if (!findCustomer) {
+        if (!findUser) {
             return response
                 .status(200)
                 .json({
@@ -168,9 +168,9 @@ export const authentication = async (request: Request, response: Response) => {
                 })
         }
         let data = {
-            id: findCustomer.id,
-            name: findCustomer.nama,
-            email: findCustomer.email,
+            id: findUser.id,
+            name: findUser.nama,
+            email: findUser.email,
         }
         let payload = JSON.stringify(data); //mennyiapakan data untuk menjadikan token
         let token = sign(payload, SECRET || "token");

@@ -8,6 +8,7 @@ const addDataSchema = Joi.object({
     harga: Joi.number().min(0).required(),
     kategori: Joi.string().valid('STIKER', 'BAJU', 'GANTUNGAN').required(), //.valid = validasi kategori menu (harus sesuai dengan enum)
     deskripsi: Joi.string().required(),
+    stok: Joi.number().required(),
     foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
 })
 
@@ -16,11 +17,12 @@ const editDataSchema = Joi.object({
     harga: Joi.number().min(0).optional(),
     kategori: Joi.string().valid('STIKER', 'BAJU', 'GANTUNGAN').optional(), //.valid = validasi kategori menu (harus sesuai dengan enum)
     deskripsi: Joi.string().optional(),
+    stok: Joi.number().optional(),
     foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
 })
 
 export const verifyAddMenu = (request: Request, response: Response, next: NextFunction) => {
-    const { error } = addDataSchema.validate(request.body, {abortEarly: false})
+    const { error } = addDataSchema.validate(request.body, { abortEarly: false })
 
     if (error) {
         return response.status(400).json({
@@ -32,7 +34,7 @@ export const verifyAddMenu = (request: Request, response: Response, next: NextFu
 }
 
 export const verifyEditMenu = (request: Request, response: Response, next: NextFunction) => {
-    const { error } = editDataSchema.validate(request.body, {abortEarly: false})
+    const { error } = editDataSchema.validate(request.body, { abortEarly: false })
 
     if (error) {
         return response.status(400).json({

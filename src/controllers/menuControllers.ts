@@ -153,10 +153,10 @@ export const updateMenu = async (request: Request, response: Response) => {
     export const authentication = async (request: Request, response: Response) => {
         try {
             const { email, password } = request.body;
-            const findCustomer = await prisma.customer.findFirst({
+            const findUser = await prisma.user.findFirst({
                 where: { email, password: md5(password) },
             });
-            if (!findCustomer) {
+            if (!findUser) {
                 return response
                     .status(200)
                     .json({
@@ -166,9 +166,9 @@ export const updateMenu = async (request: Request, response: Response) => {
                     })
             }
             let data = {
-                id: findCustomer.id,
-                name: findCustomer.nama,
-                email: findCustomer.email,
+                id: findUser.id,
+                name: findUser.nama,
+                email: findUser.email,
             }
             let payload = JSON.stringify(data); //mennyiapakan data untuk menjadikan token
             let token = sign(payload, SECRET || "token");
