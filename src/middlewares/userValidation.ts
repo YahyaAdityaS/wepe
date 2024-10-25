@@ -1,3 +1,4 @@
+import { role } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { request } from "http";
 import Joi from "joi";
@@ -8,12 +9,13 @@ const authSchema = Joi.object({
 });
 
 const addDataSchema = Joi.object({
-    name: Joi.string().required(),
+    nama: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().min(3).required(),
     telepon: Joi.string().required(),
     alamat: Joi.string().required(),
-    foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
+    foto: Joi.allow().optional(),
+    role: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
 })
 
 const editDataSchema = Joi.object({
@@ -23,6 +25,7 @@ const editDataSchema = Joi.object({
     foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
     alamat: Joi.string().optional(),
     telepon: Joi.string().optional(),
+    role: Joi.string().optional(),
 })
 
 export const verifyAuthentication = (

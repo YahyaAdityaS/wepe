@@ -32,10 +32,10 @@ export const getAllUser = async (request: Request, response: Response) => {
 
 export const createUser = async (request: Request, response: Response) => {
     try {
-        const { nama, email, password, telepon, alamat } = request.body
+        const { nama, email, password, telepon, alamat, role} = request.body
         const uuid = uuidv4()
         const newUser = await prisma.user.create({
-            data: { uuid, nama, email, telepon, alamat, password: md5(password), }
+            data: { uuid, nama, email, telepon, alamat, password: md5(password), role}
         })
         return response.json({
             status: true,
@@ -54,7 +54,7 @@ export const createUser = async (request: Request, response: Response) => {
 export const updateUser = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
-        const { nama, email, password, telepon, alamat } = request.body
+        const { nama, email, password, telepon, alamat, role } = request.body
 
         const findUser = await prisma.user.findFirst({ where: { id: Number(id) } })
         if (!findUser) return response
@@ -70,7 +70,8 @@ export const updateUser = async (request: Request, response: Response) => {
                 email: email || findUser.email, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
                 password: password || findUser.password,
                 telepon: telepon || findUser.telepon,
-                alamat: alamat || findUser.alamat
+                alamat: alamat || findUser.alamat,
+                role: role || findUser.role
             },
             where: { id: Number(id) }
         })
@@ -171,6 +172,7 @@ export const authentication = async (request: Request, response: Response) => {
             id: findUser.id,
             name: findUser.nama,
             email: findUser.email,
+            role: findUser.role
         }
         let payload = JSON.stringify(data); //mennyiapakan data untuk menjadikan token
         let token = sign(payload, SECRET || "token");

@@ -2,6 +2,7 @@ import { kategori } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import { it } from "node:test";
+import { userInfo } from "os";
 
 const addDataSchema = Joi.object({
     nama: Joi.string().required(),
@@ -9,7 +10,8 @@ const addDataSchema = Joi.object({
     kategori: Joi.string().valid('STIKER', 'BAJU', 'GANTUNGAN').required(), //.valid = validasi kategori menu (harus sesuai dengan enum)
     deskripsi: Joi.string().required(),
     stok: Joi.number().required(),
-    foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
+    foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
+    user: Joi.required() 
 })
 
 const editDataSchema = Joi.object({
@@ -18,7 +20,8 @@ const editDataSchema = Joi.object({
     kategori: Joi.string().valid('STIKER', 'BAJU', 'GANTUNGAN').optional(), //.valid = validasi kategori menu (harus sesuai dengan enum)
     deskripsi: Joi.string().optional(),
     stok: Joi.number().optional(),
-    foto: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
+    foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
+    user: Joi.required()
 })
 
 export const verifyAddMenu = (request: Request, response: Response, next: NextFunction) => {
