@@ -51,6 +51,28 @@ export const createUser = async (request: Request, response: Response) => {
     }
 }
 
+export const register = async (request: Request, response: Response) => {
+    try {
+        const { nama, email, password, telepon, alamat} = request.body
+        const uuid = uuidv4()
+        const role = "CUSTOMER"
+        const newCust = await prisma.user.create({
+            data: { uuid, nama, email, telepon, alamat, password: md5(password), role}
+        })
+        return response.json({
+            status: true,
+            date: newCust,
+            message: `Gawe User Iso Cah`
+        })
+    } catch (error) {
+        return response
+            .json({
+                status: false,
+                message: `Eror Gawe User E Cah ${error}`
+            }).status(400);
+    }
+}
+
 export const updateUser = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
@@ -79,6 +101,48 @@ export const updateUser = async (request: Request, response: Response) => {
         return response.json({
             status: true,
             data: updateUser,
+            massage: 'Update User Iso Cah'
+        })
+
+    } catch (error) {
+        return response
+            .json({
+                status: false,
+                massage: `Eror Sam ${error}`
+            })
+            .status(400)
+    }
+}
+
+export const updateCust = async (request: Request, response: Response) => {
+    try {
+        const { id } = request.params
+        const { nama, email, password, telepon, alamat } = request.body
+        const role = "CUSTOMER"
+
+        const findCust = await prisma.user.findFirst({ where: { id: Number(id) } })
+        if (!findCust) return response
+            .status(200)
+            .json({
+                status: false,
+                massage: 'Ra Enek User E Cah'
+            })
+
+        const updateCust = await prisma.user.update({
+            data: {
+                nama: nama || findCust.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
+                email: email || findCust.email, //operasi tenary (sebelah kiri ? = kondisi (price) jika kondisinya true (:) false )
+                password: password || findCust.password,
+                telepon: telepon || findCust.telepon,
+                alamat: alamat || findCust.alamat,
+                role
+            },
+            where: { id: Number(id) }
+        })
+
+        return response.json({
+            status: true,
+            data: updateCust,
             massage: 'Update User Iso Cah'
         })
 
