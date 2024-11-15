@@ -52,11 +52,16 @@ model order {
   id          Int        @id @default(autoincrement())
   uuid        String     @default("")
   idUser      Int?
+  customer    String     @default("")
   user        user?      @relation(fields: [idUser], references: [id])
   createdAt   DateTime   @default(now())
   updateAt    DateTime   @updatedAt
-  status      status     @default(PAID)
+  totalBayar  Int?
+  buktiBayar  String     @default("")
+  status      status     @default(NEW)
   metodeBayar bayar      @default(QRIS)
+  idproduk    Int?
+  produk      produk?    @relation(fields: [idproduk], references: [id])
   subOrder    subOrder[]
 }
 
@@ -67,6 +72,9 @@ model subOrder {
   order    order?  @relation(fields: [idOrder], references: [id])
   idProduk Int?
   produk   produk? @relation(fields: [idProduk], references: [id])
+  quantity Int?
+  note     String?
+  alamat   String?
 }
 
 model produk {
@@ -76,7 +84,8 @@ model produk {
   kategori  kategori   @default(BAJU)
   deskripsi String     @default("") @db.Text
   harga     Int        @default(0)
-  stok      Int        
+  stok      Int
   foto      String     @default("")
   subOrder  subOrder[]
+  order     order[]
 }

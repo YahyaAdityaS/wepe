@@ -11,7 +11,7 @@ const addDataSchema = Joi.object({
     deskripsi: Joi.string().required(),
     stok: Joi.number().required(),
     foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
-    user: Joi.required() 
+    user: Joi.optional() 
 })
 
 const editDataSchema = Joi.object({
@@ -21,7 +21,7 @@ const editDataSchema = Joi.object({
     deskripsi: Joi.string().optional(),
     stok: Joi.number().optional(),
     foto: Joi.allow().optional(), //optional (Bisa diisi bisa tidak)
-    user: Joi.required()
+    user: Joi.optional()
 })
 
 export const verifyAddMenu = (request: Request, response: Response, next: NextFunction) => {
