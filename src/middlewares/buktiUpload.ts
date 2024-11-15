@@ -1,7 +1,6 @@
 import { Request } from "express";
 import multer from "multer";
 import {BASE_URL} from "../global";
-import { request } from "http";
 
 const storage = multer.diskStorage({
     destination: (request:Request, file: Express.Multer.File, cb : (eror : Error | null, destination: string) => void) => {

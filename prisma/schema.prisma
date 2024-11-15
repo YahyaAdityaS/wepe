@@ -60,9 +60,10 @@ model order {
   buktiBayar  String     @default("")
   status      status     @default(NEW)
   metodeBayar bayar      @default(QRIS)
-  idproduk    Int?
-  produk      produk?    @relation(fields: [idproduk], references: [id])
+  alamat      String?
   subOrder    subOrder[]
+  produk      produk?    @relation(fields: [produkId], references: [id])
+  produkId    Int?
 }
 
 model subOrder {
@@ -74,7 +75,6 @@ model subOrder {
   produk   produk? @relation(fields: [idProduk], references: [id])
   quantity Int?
   note     String?
-  alamat   String?
 }
 
 model produk {

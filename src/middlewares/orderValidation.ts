@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
 const orderListSchema = Joi.object({
-    idMenu: Joi.number().required(),
+    idProduk: Joi.number().required(),
     quantity: Joi.number().required(),
     note: Joi.string().optional(),
     alamat: Joi.string().optional()
@@ -11,7 +11,6 @@ const orderListSchema = Joi.object({
 const addDataSchema = Joi.object({
     customer: Joi.string().required(),
     metodeBayar: Joi.string().valid("CASH", "QRIS").uppercase().required(),
-    status: Joi.string().valid("NEW", "PAID", "DONE").uppercase().required(),
     buktiBayar: Joi.allow().optional(),
     idUser: Joi.number().optional(),
     subOrder: Joi.array().items(orderListSchema).min(1).required(),

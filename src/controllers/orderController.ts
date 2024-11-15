@@ -40,7 +40,7 @@ export const getAllOrders = async (request: Request, response: Response) => {
 export const createOrder = async (request: Request, response: Response) => {
     try {
         /** get requested data (data has been sent from request) */
-        const { customer, metodeBayar, status, subOrder } = request.body
+        const { customer, metodeBayar, subOrder } = request.body
         const user = request.body.user
         const uuid = uuidv4()
         /**
@@ -50,31 +50,31 @@ export const createOrder = async (request: Request, response: Response) => {
         /** loop details of order to check menu and count the total price */
         let totalBayar = 0
         for (let index = 0; index < subOrder.length; index++) {
-            const { idMenu } = subOrder[index]
+            const { idProduk } = subOrder[index]
             const detailMenu = await prisma.produk.findFirst({
                 where: {
-                    id: idMenu
+                    id: idProduk
                 }
             })
             if (!detailMenu) return response
-                .status(200).json({ status: false, message: `Menu with id ${idMenu} is not found` })
+                .status(200).json({ status: false, message: `Menu with id ${idProduk} is not found` })
             totalBayar += (detailMenu.harga * subOrder[index].quantity)
         }
 
 
         /** process to save new order */
         const newOrder = await prisma.order.create({
-            data: { uuid, customer, totalBayar, metodeBayar, status, idUser: user.id }
+            data: { uuid, customer, totalBayar, metodeBayar, status: "NEW", idUser: user.id }
         })
 
 
         /** loop details of Order to save in database */
         for (let index = 0; index < subOrder.length; index++) {
             const uuid = uuidv4()
-            const { idMenu, quantity, note, alamat } = subOrder[index]
+            const { idProduk, quantity, note } = subOrder[index]
             await prisma.subOrder.create({
                 data: {
-                    uuid, idOrder: newOrder.id, idProduk: Number(idMenu), quantity: Number(quantity), note, alamat
+                    uuid, idOrder: newOrder.id, idProduk: Number(idProduk), quantity: Number(quantity), note
                 }
             })
         }
@@ -171,6 +171,7 @@ export const updateStatusOrder = async (request: Request, response: Response) =>
  export const upBuktiBayar = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
+        console.log(id)
         const findOrder = await prisma.order.findFirst({ where: { id: Number(id) } })
         if (!findOrder) return response
             .status(200)
@@ -178,7 +179,7 @@ export const updateStatusOrder = async (request: Request, response: Response) =>
         let filename = findOrder.buktiBayar
         if (request.file) {
             filename = request.file.filename
-            let path = `${BASE_URL}/../../../profile-picture${findOrder.buktiBayar}`
+            let path = `${BASE_URL}/../../../bukti-bayar${findOrder.buktiBayar}`
             let exists = fs.existsSync(path)
             if (exists && findOrder.buktiBayar !== ``) fs.unlinkSync(path)
         }
@@ -199,3 +200,4 @@ export const updateStatusOrder = async (request: Request, response: Response) =>
         }).status(400)
     }
 }
+
