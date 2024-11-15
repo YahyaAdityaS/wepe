@@ -171,19 +171,19 @@ export const updateStatusOrder = async (request: Request, response: Response) =>
  export const upBuktiBayar = async (request: Request, response: Response) => {
     try {
         const { id } = request.params
-        const findOrder = await prisma.user.findFirst({ where: { id: Number(id) } })
+        const findOrder = await prisma.order.findFirst({ where: { id: Number(id) } })
         if (!findOrder) return response
             .status(200)
             .json({ status: false, message: 'Ra Nemu Order E Sam' })
-        let filename = findOrder.foto
+        let filename = findOrder.buktiBayar
         if (request.file) {
             filename = request.file.filename
-            let path = `${BASE_URL}/../../../profile-picture${findOrder.foto}`
+            let path = `${BASE_URL}/../../../profile-picture${findOrder.buktiBayar}`
             let exists = fs.existsSync(path)
-            if (exists && findOrder.foto !== ``) fs.unlinkSync(path)
+            if (exists && findOrder.buktiBayar !== ``) fs.unlinkSync(path)
         }
-        const updatePicture = await prisma.user.update({
-            data: { foto: filename },
+        const updatePicture = await prisma.order.update({
+            data: { buktiBayar: filename , status:'PAID'},
             where: { id: Number(id) }
         })
         return response.json({

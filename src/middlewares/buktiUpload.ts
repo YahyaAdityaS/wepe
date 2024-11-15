@@ -5,7 +5,7 @@ import { request } from "http";
 
 const storage = multer.diskStorage({
     destination: (request:Request, file: Express.Multer.File, cb : (eror : Error | null, destination: string) => void) => {
-        cb(null, `${BASE_URL}/public/profile-picture`)
+        cb(null, `${BASE_URL}/public/bukti-bayar`)
     },
     filename: (request: Request, file: Express.Multer.File, cb: (eror:Error | null, destination: string) => void) => {
         cb(null, `${new Date().getTime().toString()}-${file.originalname}`)
