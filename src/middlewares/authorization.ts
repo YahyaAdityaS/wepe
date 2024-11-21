@@ -3,6 +3,7 @@ import { verify } from "jsonwebtoken";
 import { SECRET } from "../global";
 import { Interface } from "readline";
 import { decode } from "punycode";
+import jwt from 'jsonwebtoken';
 
 interface JwtPayload{
     id: string,

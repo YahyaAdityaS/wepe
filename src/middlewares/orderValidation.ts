@@ -5,7 +5,6 @@ const orderListSchema = Joi.object({
     idProduk: Joi.number().required(),
     quantity: Joi.number().required(),
     note: Joi.string().optional(),
-    alamat: Joi.string().optional()
 })
 
 const addDataSchema = Joi.object({
@@ -13,6 +12,7 @@ const addDataSchema = Joi.object({
     metodeBayar: Joi.string().valid("CASH", "QRIS").uppercase().required(),
     buktiBayar: Joi.allow().optional(),
     idUser: Joi.number().optional(),
+    alamat: Joi.string().required(), //TAMBAHKE ALAMAT
     subOrder: Joi.array().items(orderListSchema).min(1).required(),
     user: Joi.optional()
 })
@@ -34,7 +34,7 @@ export const verifyAddOrder = (request: Request, response: Response, next: NextF
 
 /** create schema when edit status order's data */
 const editDataSchema = Joi.object({
-    status: Joi.string().valid("NEW", "PAID", "DONE").uppercase().required(),
+    status: Joi.string().valid("DONE").uppercase().required(),
     buktiBayar: Joi.allow().optional(),
     user: Joi.optional()
 })
