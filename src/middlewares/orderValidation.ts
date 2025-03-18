@@ -20,8 +20,6 @@ const addDataSchema = Joi.object({
 export const verifyAddOrder = (request: Request, response: Response, next: NextFunction) => {
     /** validate a request body and grab error if exist */
     const { error } = addDataSchema.validate(request.body, { abortEarly: false })
-
-
     if (error) {
         /** if there is an error, then give a response like this */
         return response.status(400).json({

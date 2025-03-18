@@ -16,7 +16,7 @@ const addDataSchema = Joi.object({
     alamat: Joi.string().required(),
     foto: Joi.allow().optional(),
     role: Joi.allow().optional() //optional (Bisa diisi bisa tidak)
-})
+}).unknown(true)
 
 const editDataSchema = Joi.object({
     nama: Joi.string().optional(),
@@ -26,7 +26,7 @@ const editDataSchema = Joi.object({
     alamat: Joi.string().optional(),
     telepon: Joi.string().optional(),
     role: Joi.string().optional(),
-})
+}).unknown(true)
 
 export const verifyAuthentication = (
     request: Request,

@@ -74,7 +74,7 @@ export const updateMenu = async (request: Request, response: Response) => {
         let filename = findProduk.foto
         if (request.file) {
             filename = request.file.filename
-            let path = `${BASE_URL}/../public/menu_picture/${findProduk.foto}`
+            let path = `${BASE_URL}/../public/produk-picture/${findProduk.foto}`
             let exists = fs.existsSync(path)
             if (exists && findProduk.foto !== ``) fs.unlinkSync(path)
         }
@@ -105,6 +105,7 @@ export const updateMenu = async (request: Request, response: Response) => {
             .status(400)
     }
 }
+
 export const deleteMenu = async (request: Request, response: Response) => {
     try {
         const { id } = request.params

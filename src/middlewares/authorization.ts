@@ -41,7 +41,6 @@ export const verifyRole = (allowedRoles : string[]) => {
                 message: `Acces denied. Requires one of the following rules: ${allowedRoles.join(',')}`
             });
         }
-
         next();
     }
 }

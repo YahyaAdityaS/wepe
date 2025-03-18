@@ -14,5 +14,4 @@ app.delete(`/:id`, [verifyToken, verifyRole(["ADMIN"])], deleteOrder),
 app.put(`/pic/:id`,[uploadFile.single("foto")], upBuktiBayar)
 //app.put('/coba/:id', [uploadFile.single('foto')], cobaah)
 
-
-export default app
+export default app;

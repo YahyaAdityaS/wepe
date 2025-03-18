@@ -70,7 +70,6 @@ export const createOrder = async (request: Request, response: Response) => {
                 }
             })
         }
-
         /** process to save new order */
         const newOrder = await prisma.order.create({
             data: { uuid, customer, totalBayar, metodeBayar, status: "NEW", idUser: user.id, alamat}

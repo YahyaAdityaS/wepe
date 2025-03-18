@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.get(`/`,[verifyToken, verifyRole(["ADMIN"])], getAllUser)
 app.post(`/create`, [verifyToken, verifyRole(["ADMIN"])], [verifyAddUser], createUser)
-app.put(`/:id`, [verifyToken, verifyRole(["ADMIN"])], [verifyEditUser], updateUser)
+app.put(`/:id`, [verifyToken, verifyRole(["ADMIN"]), uploadFile.single("picture"), verifyEditUser], updateUser)
 app.put(`/editProfile/:id`, [verifyToken, verifyRole(["CUSTOMER"])], [verifyEditUser], updateCust)
 app.post(`/login`,[verifyAuthentication], authentication)
 app.post(`/register`,[verifyAddUser], register)

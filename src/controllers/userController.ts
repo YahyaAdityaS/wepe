@@ -57,7 +57,7 @@ export const register = async (request: Request, response: Response) => {
         const uuid = uuidv4()
         const role = "CUSTOMER"
         const newCust = await prisma.user.create({
-            data: { uuid, nama, email, telepon, alamat, password: md5(password), role}
+            data: { uuid, nama, email, telepon, alamat, password: md5(password)}
         })
         return response.json({
             status: true,
@@ -127,7 +127,6 @@ export const updateCust = async (request: Request, response: Response) => {
                 status: false,
                 massage: 'Ra Enek User E Cah'
             })
-
         const updateCust = await prisma.user.update({
             data: {
                 nama: nama || findCust.nama, //or untuk perubahan (kalau ada yang kiri dijalankan, misal tidak ada dijalankan yang kanan)
@@ -246,7 +245,7 @@ export const authentication = async (request: Request, response: Response) => {
             .json({
                 status: true,
                 logged: true,
-                message: `Login Succes`, token
+                message: `Login Succes`, token, data:data
             })
     } catch (error) {
         return response
